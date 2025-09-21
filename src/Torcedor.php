@@ -15,6 +15,6 @@ class Torcedor extends Pessoa {
     }
 
     public function torcer(): string {
-        return "{$this->getNome()} está torcendo!";
+        return "{$this->getNome()} tá torcendo!";
     }
 }

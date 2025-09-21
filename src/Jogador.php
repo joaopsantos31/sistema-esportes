@@ -17,10 +17,10 @@ class Jogador extends Pessoa { // herda de pessoa
         public int $assistencias = 0,
         public string $carreira = ""
     ) {
-        parent::__construct($nome, $idade, $nacionalidade); // construtor herdado de pessoa
+        parent::__construct($nome, $idade, $nacionalidade); // construto herdado de pessoa
     }
 
     public function jogar(): string {
-        return "{$this->getNome()} está jogando como {$this->posicao}.";
+        return "{$this->getNome()} está jogando de {$this->posicao}."; 
     }
 }
