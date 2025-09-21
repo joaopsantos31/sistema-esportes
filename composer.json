@@ -1,0 +1,12 @@
+{
+    "name": "joaopsantos31/sistema-esportes",
+    "description": "Projeto de Programação Orientada a Objetos em PHP baseado em esportes",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Joaopsantos31\\SistemaEsportes\\": "src/"
+        }
+    },
+    "require": {}
+}
