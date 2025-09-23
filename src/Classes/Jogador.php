@@ -20,7 +20,7 @@ class Jogador extends Pessoa { // herda de pessoa
         parent::__construct($nome, $idade, $nacionalidade); // construto herdado de pessoa
     }
 
-    public function jogar(): string {
+    public function mostrarPosicao(): string {
         return "{$this->getNome()} está jogando de {$this->posicao}."; 
-    }
+    } 
 }

@@ -9,12 +9,12 @@ class Torcedor extends Pessoa {
         int $idade,
         string $nacionalidade,
         public string $fidelidade,
-        public string $tipo
+        public string $tipo // organizada, comum
     ) {
         parent::__construct($nome, $idade, $nacionalidade);
     }
 
     public function torcer(): string {
-        return "{$this->getNome()} tá torcendo!";
+        return "{$this->getNome()} tá torcendo!"; // mesmo caso
     }
 }

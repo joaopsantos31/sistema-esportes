@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Joaopsantos31\\SistemaEsportes\\": "src/"
+            "SistemaEsportes\\": "src/"
         }
     },
     "require": {}

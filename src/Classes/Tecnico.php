@@ -14,10 +14,4 @@ class Tecnico extends Pessoa {
         parent::__construct($nome, $idade, $nacionalidade);
     }
 
-    public function escalarTime(Time $time): string {
-        return "Técnico {$this->getNome()} escalou o time {$time->nome}.";
-    }
-
-    public function planejarJogo(): string { return "Planejando o jogo..."; }
-    public function treinar(): string { return "Treinando a equipe..."; }
 }
