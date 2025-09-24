@@ -1,10 +1,10 @@
 # ⚽ Sistema de Gerenciamento de Times de Futebol (CLI em PHP)
 
 ## 👨‍🎓 Integrantes do Grupo
--  – RA:  
--  – RA: 
--  – RA:  
--  – RA: 
+- Bruno Furlan  – RA: 2078272
+- Adam Rkein – RA: 2022830
+- Kaue Augusto Ferreira de Araújo – RA:  233365
+- João Pedro Rodrigues dos Santos – RA: 2097331
 
 ---
 
