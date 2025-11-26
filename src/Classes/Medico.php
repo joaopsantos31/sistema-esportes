@@ -24,7 +24,6 @@ class Medico extends Pessoa { // subclasse de pessoa
         return $this->anosExperiencia; 
     }
     
-    // polimorfismo - implementação específica do método abstrato
     public function descrever(): string {
         return "Médico {$this->getNome()}, {$this->idade} anos, especialidade em {$this->especialidade}, CRM: {$this->crm}";
     }
