@@ -1,21 +1,31 @@
 <?php
 declare(strict_types=1);
-
 namespace SistemaEsportes\Classes;
 
-class Medico extends Pessoa { // subb de pessoa
+class Medico extends Pessoa { // subclasse de pessoa
     public function __construct(
         string $nome,
         int $idade,
         string $nacionalidade,
-        public string $especialidade,
-        public string $crm,
-        public int $anosExperiencia
+        protected string $especialidade, // encapsulamento
+        protected string $crm,
+        protected int $anosExperiencia
     ) {
         parent::__construct($nome, $idade, $nacionalidade); // construtor herdado
     }
-
-    public function tratarJogador(Jogador $j): string {
-        return "Dr(a). {$this->getNome()} tratou o jogador {$j->getNome()}."; // tbm pro futuro, qnd der pra simular lesão em partidas etc
+    
+    public function getEspecialidade(): string { 
+        return $this->especialidade;
+     }
+    public function getCrm(): string { 
+        return $this->crm; 
+    }
+    public function getAnosExperiencia(): int { 
+        return $this->anosExperiencia; 
+    }
+    
+    // polimorfismo - implementação específica do método abstrato
+    public function descrever(): string {
+        return "Médico {$this->getNome()}, {$this->idade} anos, especialidade em {$this->especialidade}, CRM: {$this->crm}";
     }
 }

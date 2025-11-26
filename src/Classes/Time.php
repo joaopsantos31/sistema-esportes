@@ -1,32 +1,33 @@
 <?php
-declare(strict_types=1); // explicação no index
-
+declare(strict_types=1);
 namespace SistemaEsportes\Classes;
 
 class Time {
-    public array $jogadores = []; // array para armanezar jogadores
-    public array $medicos = []; // array para armanezar medicos
-    public array $torcedores = []; // array para armanezar torcedores
-    public ?Tecnico $tecnico = null; // variável para técnico, nulo como padrão 
-
-    public string $nome;
-    public string $regiao;
-    public \DateTimeInterface $fundacao; 
-    public string $estadio = ''; // opcional (flamengo...)
-    public array $titulos = [];
-    public string $serie = '';
-    public array $patrocinadores = [];
-
+    protected array $jogadores = []; 
+    protected array $medicos = [];
+    protected array $torcedores = [];
+    protected ?Tecnico $tecnico = null;
+    protected string $nome;
+    protected string $identificador; 
+    protected string $regiao;
+    protected \DateTimeInterface $fundacao; 
+    protected string $estadio = '';
+    protected array $titulos = [];
+    protected string $serie = '';
+    protected array $patrocinadores = [];
+    
     public function __construct(
         string $nome,
         string $regiao,
         \DateTimeInterface $fundacao,
-        string $estadio = '', // valor padrão vazio
-        array $titulos = [], //mesmo caso
-        string $serie = '', // mesmo caso
-        array $patrocinadores = [] // mesmo caso
+        string $estadio = '',
+        array $titulos = [],
+        string $serie = '',
+        array $patrocinadores = []
     ) {
         $this->nome = $nome;
+        $nomeNormalizado = str_replace(' ', '', $nome);
+        $this->identificador = strtoupper($nomeNormalizado);
         $this->regiao = $regiao;
         $this->fundacao = $fundacao;
         $this->estadio = $estadio;
@@ -34,37 +35,91 @@ class Time {
         $this->serie = $serie;
         $this->patrocinadores = $patrocinadores;
     }
-
-    public function contratarJogador(Jogador $j): void { // add jogadores ao time
+    
+    public function getNome(): string { return $this->nome; }
+    public function getIdentificador(): string { return $this->identificador; }
+    public function getRegiao(): string { return $this->regiao; }
+    public function getFundacao(): \DateTimeInterface { return $this->fundacao; }
+    public function getEstadio(): string { return $this->estadio; }
+    public function getTitulos(): array { return $this->titulos; }
+    public function getSerie(): string { return $this->serie; }
+    public function getPatrocinadores(): array { return $this->patrocinadores; }
+    public function getJogadores(): array { return $this->jogadores; }
+    public function getMedicos(): array { return $this->medicos; }
+    public function getTorcedores(): array { return $this->torcedores; }
+    public function getTecnico(): ?Tecnico { return $this->tecnico; }
+    
+    public function contratarJogador(Jogador $j): void {
         $this->jogadores[] = $j;
     }
-
-    public function contratarTecnico(Tecnico $t): void { // add um tecnico ao time 
+    
+    public function contratarTecnico(Tecnico $t): void {
         $this->tecnico = $t;
     }
-
-    public function contratarMedico(Medico $m): void { // add um medico ao time
+    
+    public function contratarMedico(Medico $m): void {
         $this->medicos[] = $m;
     }
-
-    public function adicionarTorcedor(Torcedor $t): void { // add um torcedor ao time
-        $this->torcedores[] = $t; // [] add ao fim da array
+    
+    public function adicionarTorcedor(Torcedor $t): void {
+        $this->torcedores[] = $t;
     }
+    
+    public function removerJogador(string $nome): bool {
+        foreach ($this->jogadores as $indice => $j) {
+            if (strtoupper($j->getNome()) === strtoupper($nome)) {
+                unset($this->jogadores[$indice]);
+                $this->jogadores = array_values($this->jogadores); // reindexar array
+                return true;
+            }
+        }
+        return false;
+    }
+    
 
-
-    public function info(): string { // função pra retornar as informações
-        $tecnicoNome = $this->tecnico ? $this->tecnico->getNome() : "Sem técnico"; // verifica se tem ou n tecnico
-
+    public function removerMedico(string $nome): bool {
+        foreach ($this->medicos as $indice => $m) {
+            if (strtoupper($m->getNome()) === strtoupper($nome)) {
+                unset($this->medicos[$indice]);
+                $this->medicos = array_values($this->medicos);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public function removerTorcedor(string $nome): bool {
+        foreach ($this->torcedores as $indice => $t) {
+            if (strtoupper($t->getNome()) === strtoupper($nome)) {
+                unset($this->torcedores[$indice]);
+                $this->torcedores = array_values($this->torcedores);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public function removerTecnico(): bool {
+        if ($this->tecnico !== null) {
+            $this->tecnico = null;
+            return true;
+        }
+        return false;
+    }
+    
+    public function info(): string {
+        $tecnicoNome = $this->tecnico ? $this->tecnico->getNome() : "Sem técnico";
+        
         // Jogadores
         $listaJogadores = "Nenhum";
-        if (!empty($this->jogadores)) { // SE não estiver vazio a array de jogadores do time
+        if (!empty($this->jogadores)) {
             $nomes = "";
             foreach ($this->jogadores as $j) {
-                $nomes .= $j->getNome() . ", "; // percorre os jogadores, getnome pra aparecer o nome
+                $nomes .= $j->getNome() . ", ";
             }
-            $listaJogadores = rtrim($nomes, ", "); // rtrim tira a virgula extra no final
+            $listaJogadores = rtrim($nomes, ", ");
         }
-
+        
         // Médicos
         $listaMedicos = "Nenhum";
         if (!empty($this->medicos)) {
@@ -74,7 +129,7 @@ class Time {
             }
             $listaMedicos = rtrim($nomes, ", ");
         }
-
+        
         // Torcedores
         $listaTorcedores = "Nenhum";
         if (!empty($this->torcedores)) {
@@ -84,16 +139,16 @@ class Time {
             }
             $listaTorcedores = rtrim($nomes, ", ");
         }
-
+        
         return "====== INFORMAÇÕES DO TIME ======\n\n"
              . "Nome: {$this->nome}\n"
-             . "Estádio: " . ($this->estadio !== '' ? $this->estadio : "Sem estádio.") . "\n" // caso estado NÃO estiver vazio, mostra o nome, se não, mostra estádio
+             . "Identificador: {$this->identificador}\n"
+             . "Estádio: " . ($this->estadio !== '' ? $this->estadio : "Sem estádio.") . "\n"
              . "Região: {$this->regiao}\n"
-             . "Fundação: " . $this->fundacao->format("d/m/Y") . "\n" // data no padrão dia mes ano
+             . "Fundação: " . $this->fundacao->format("d/m/Y") . "\n"
              . "Técnico: {$tecnicoNome}\n"
-             . "Jogadores (" . count($this->jogadores) . "): {$listaJogadores}\n" // contagem de jogadores
-             . "Médicos (" . count($this->medicos) . "): {$listaMedicos}\n" // mesma lógica
-             . "Torcedores (" . count($this->torcedores) . "): {$listaTorcedores}\n"; // mesma lógica
-             // o . concatena a string, ou seja, retorna tudo em uma unica string
+             . "Jogadores (" . count($this->jogadores) . "): {$listaJogadores}\n"
+             . "Médicos (" . count($this->medicos) . "): {$listaMedicos}\n"
+             . "Torcedores (" . count($this->torcedores) . "): {$listaTorcedores}\n";
     }
-    }
+}

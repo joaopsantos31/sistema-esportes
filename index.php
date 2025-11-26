@@ -1,8 +1,5 @@
 <?php 
-declare(strict_types=1); // o php por padrão tenta converter valores quando vc passa
-// um tipo eerrado para uma função, com o tipo estrito isso não acontece
-// o erro é acusado, isso aumenta a segurança do código, é mais importante no caso
-// de projetos maiores, mesmo assim é interessante para evitar problemas
+declare(strict_types=1);
 
 use SistemaEsportes\Classes\Pessoa;
 use SistemaEsportes\Classes\Jogador;
@@ -10,29 +7,27 @@ use SistemaEsportes\Classes\Juiz;
 use SistemaEsportes\Classes\Torcedor;
 use SistemaEsportes\Classes\Time;
 use SistemaEsportes\Classes\Partida;
-use SistemaEsportes\Classes\Medico; // importando as classes 
+use SistemaEsportes\Classes\Medico;
 use SistemaEsportes\Classes\Tecnico;
 
-require __DIR__ . '/vendor/autoload.php'; // para carregar as classes do projeto com o autoload composer
+require __DIR__ . '/vendor/autoload.php';
 
-$partidas = []; // array para armazenar as partidas agendadas
+$partidas = []; // array vazia de partidas
 
-// Função para "limpar" a tela (pula 50 linhas)
 function limparTela(): void {
     for ($contador = 0; $contador < 50; $contador++){
         echo "\n";
     }
 }
 
-// Real Madrid - time padrão (criação do time)
+// Real Madrid - time padrão
 $realMadrid = new Time(
     'Real Madrid',
     'Madrid, Espanha',
-    new DateTime('1902-03-06'), // date time transforma o string em data
+    new DateTime('1902-03-06'),
     'Santiago Bernabéu'
 );
 
-// Criação do Elenco do Real
 $realMadrid->contratarJogador(new Jogador('Thibaut Courtois', 33, 'Bélgica', 1.99, 96, 'Goleiro', 1, 'Esquerda'));
 $realMadrid->contratarJogador(new Jogador('Dani Carvajal', 33, 'Espanha', 1.73, 73, 'Lateral Direito', 2, 'Direita'));
 $realMadrid->contratarJogador(new Jogador('Éder Militão', 27, 'Brasil', 1.86, 80, 'Zagueiro', 3, 'Direita')); 
@@ -45,15 +40,14 @@ $realMadrid->contratarJogador(new Jogador('Vinícius Júnior', 25, 'Brasil', 1.7
 $realMadrid->contratarJogador(new Jogador('Kylian Mbappé', 26, 'França', 1.78, 73, 'Ponta Direita', 10, 'Direita'));
 $realMadrid->contratarJogador(new Jogador('Gonzalo García', 22, 'Brasil', 1.85, 80, 'Centroavante', 16, 'Direita'));
 
-// Barcelona - time padrão (criação do time)
+// Barcelona - time padrão
 $barcelona = new Time(
     'FC Barcelona',
     'Barcelona, Espanha',
-    new DateTime('1899-11-29'), // transforma string em data
+    new DateTime('1899-11-29'),
     'Camp Nou'
 );
 
-// Criação do Elenco do Barça
 $barcelona->contratarJogador(new Jogador('Ter Stegen', 33, 'Alemanha', 1.94, 85, 'Goleiro', 1, 'Direita'));
 $barcelona->contratarJogador(new Jogador('Alejandro Balde', 21, 'Espanha', 1.78, 70, 'Lateral Esquerdo', 3, 'Esquerda'));
 $barcelona->contratarJogador(new Jogador('Ronald Araújo', 26, 'Uruguai', 1.88, 82, 'Zagueiro', 4, 'Direita'));
@@ -66,24 +60,24 @@ $barcelona->contratarJogador(new Jogador('Lamine Yamal', 17, 'Espanha', 1.70, 60
 $barcelona->contratarJogador(new Jogador('Raphinha', 28, 'Brasil', 1.76, 74, 'Ponta Direita', 22, 'Esquerda'));
 $barcelona->contratarJogador(new Jogador('Robert Lewandowski', 37, 'Polônia', 1.84, 79, 'Centroavante', 9, 'Direita'));
 
-// Armazenando os times em caixa alta na array de times 
-$times[strtoupper("Real Madrid")] = $realMadrid; 
-$times[strtoupper("FC Barcelona")] = $barcelona; 
 
-// Partida inicial agendada entre real e barça
+$times = []; // array de times vazia
+$times[$realMadrid->getIdentificador()] = $realMadrid; // adiciona os times com os identificadores
+$times[$barcelona->getIdentificador()] = $barcelona; 
+
+// Partida inicial
 $partidaInicial = new Partida(
     new DateTime('2025-10-26'), 
     'Santiago Bernabéu',
     [$realMadrid, $barcelona]
 );
-$partidas[] = $partidaInicial; // add a partida a lista de partidas iniciais
+$partidas[] = $partidaInicial;
 
-// Função do Menu
 function exibirMenu(): void
 {
-    limparTela(); // chama a função de limpar tela antes de exibir o menu
+    limparTela();
     echo "\n======================\n";
-    echo " FuteSystem\n";
+    echo " FuteSystem 2.0\n";
     echo "======================\n\n";
 
     echo "[1] - Criar time\n";
@@ -97,18 +91,18 @@ function exibirMenu(): void
     echo "[Q] - Sair do sistema\n";
 }
 
-while (true) { // loop geral
+while (true) {
     exibirMenu();
 
     echo "\nDigite a opção desejada: ";
-    $entrada = trim(readline()); //  trim tira espaços
+    $entrada = trim(readline());
 
     if (strtoupper($entrada) === "Q") { 
         echo "Saindo do sistema. Até a próxima!!...\n"; 
         break;
     }
 
-    $opcao = (int) $entrada; // convertendo pra int 
+    $opcao = (int) $entrada;
 
     switch ($opcao) {
         case 1:
@@ -117,14 +111,16 @@ while (true) { // loop geral
 
             echo "Times já cadastrados: \n\n";
             foreach ($times as $t) {
-                echo "- {$t->nome}\n"; // autoexplicativo
+                echo "- {$t->getNome()}\n";
             }
 
             echo "\n";
-            $nome = readline("Nome do time: "); // input de nome do time
+            $nome = readline("Nome do time: ");
+            // identificador sem espaços e em maiúscula
+            $identificador = strtoupper(str_replace(' ', '', $nome));
 
-            if (isset($times[strtoupper($nome)])){ 
-                echo "O time $nome já está cadastrado no sistema.\n"; // checa se ja tem no sistema
+            if (isset($times[$identificador])){ 
+                echo "O time $nome já está cadastrado no sistema.\n";
                 readline("\nDigite enter para voltar ao menu..");
                 break;
             }
@@ -134,8 +130,8 @@ while (true) { // loop geral
             $fundacao = DateTime::createFromFormat('d/m/Y', $dataFund); 
             $estadio = readline("Estádio (opcional, deixe vazio se não tiver): "); 
 
-            // Armazenando em caixa alta
-            $times[strtoupper($nome)] = new Time($nome, $regiao, $fundacao, $estadio); // transforma a chave da array do time criado agora em caixa alta, evitando problema em busca
+            $novoTime = new Time($nome, $regiao, $fundacao, $estadio);
+            $times[$novoTime->getIdentificador()] = $novoTime;
             echo "Time criado com sucesso!\n";
             readline("\nDigite enter para voltar ao menu...");
             break;
@@ -143,28 +139,29 @@ while (true) { // loop geral
         case 2:
             limparTela();
             echo "=== Listar times ===\n\n";
-            if (empty($times)) { // confere se array de time n ta vazia
+            if (empty($times)) {
                 echo "Nenhum time cadastrado no sistema.\n";
             } else {
                 foreach ($times as $t) {
-                    echo "- {$t->nome}\n"; // percorre os times cadastrados na array de times
+                    echo "- {$t->getNome()}\n";
                 }
             }
-            readline("\nPressione enter para voltar ao menu..."); // mensagem antes de voltar para o menu
+            readline("\nPressione enter para voltar ao menu...");
             break;
 
         case 3:
             limparTela();
             echo "=== Excluir Time ===\n\n";
             foreach ($times as $t) {
-                echo "- {$t->nome}\n"; // percorre times
+                echo "- {$t->getNome()}\n";
             }
 
             echo "\n";
-            $nome = strtoupper(readline("Nome do time que vai ser excluido: "));
+            $nome = readline("Nome do time que vai ser excluido: ");
+            $identificador = strtoupper(str_replace(' ', '', $nome));
 
-            if (isset($times[$nome])) { // testa se o time que o usuário escolheu pra excluir realmente está cadastrado
-                unset($times[$nome]); // tira o time da array de times
+            if (isset($times[$identificador])) {
+                unset($times[$identificador]);
                 echo "Time removido. Adeus!\n"; 
             } else {
                 echo "Time não encontrado no sistema.\n"; 
@@ -177,176 +174,185 @@ while (true) { // loop geral
             limparTela();
             echo "=== Adicionar pessoa em time ===\n\n";
 
-             if (empty($times)) { // testa se a array de times tá vazia
-                echo "Nenhum time cadastrado no sistema.\n"; // autoexplicativo
+            if (empty($times)) {
+                echo "Nenhum time cadastrado no sistema.\n";
                 readline("\nDigite enter para voltar ao menu...");
-            break;
+                break;
             }
 
             echo "Times cadastrados no sistema:\n\n";
             foreach ($times as $t) {
-            echo "- {$t->nome}\n"; // percorre os times da array de times
+                echo "- {$t->getNome()}\n";
             }
 
-             echo "\n";
-            $timeNome = strtoupper(readline("Nome do time: ")); // formata o input pra caixa alta
+            echo "\n";
+            $timeNome = readline("Nome do time: ");
+            $identificador = strtoupper(str_replace(' ', '', $timeNome));
 
-            if (!isset($times[$timeNome])) { // testa se o time ta cadastrado
-            echo "O time não existe.\n"; 
-            readline("\nDigite enter para voltar ao menu...");
-            break;
-        }
+            if (!isset($times[$identificador])) {
+                echo "O time não existe.\n"; 
+                readline("\nDigite enter para voltar ao menu...");
+                break;
+            }
 
             echo "\nDigite o número da sua escolha: ";
             echo "\n[1] Jogador | [2] Técnico | [3] Médico | [4] Torcedor: ";
-            $tipo = (int)readline(); // converte pra int
+            $tipo = (int)readline();
 
-        switch ($tipo) {
-            case 1: // jogador
-                // criando o jogador antes de adicionar ao time
-                $j = new Jogador(
-                    readline("Nome: "),
-                    (int)readline("Idade: "),
-                    readline("Nacionalidade: "),
-                    (float)readline("Altura: "),
-                    (float)readline("Peso: "),
-                    readline("Posição: "),
-                    (int)readline("Número da camisa: "),
-                    readline("Perna dominante: ")
-                );
+            switch ($tipo) {
+                case 1:
+                    $j = new Jogador(
+                        readline("Nome: "),
+                        (int)readline("Idade: "),
+                        readline("Nacionalidade: "),
+                        (float)readline("Altura: "),
+                        (float)readline("Peso: "),
+                        readline("Posição: "),
+                        (int)readline("Número da camisa: "),
+                        readline("Perna dominante: ")
+                    );
 
-                $times[$timeNome]->contratarJogador($j); // adiciona jogador ao time
-                echo "Jogador {$j->getNome()} contratado ao time {$times[$timeNome]->nome}. Bem-vindo!\n"; // mensagem confirmando a contratação
-                break;
+                    $times[$identificador]->contratarJogador($j);
+                    echo "Jogador {$j->getNome()} contratado ao time {$times[$identificador]->getNome()}. Bem-vindo!\n";
+                    break;
 
-            case 2: // técnico
-                $t = new Tecnico(
-                readline("Nome: "),
-                (int)readline("Idade: "),
-                readline("Nacionalidade: "),
-                (int)readline("Experiência (anos): "),
-                (float)readline("Salário: ")
-            );
+                case 2:
+                    $t = new Tecnico(
+                        readline("Nome: "),
+                        (int)readline("Idade: "),
+                        readline("Nacionalidade: "),
+                        (int)readline("Experiência (anos): "),
+                        (float)readline("Salário: ")
+                    );
 
-            $times[$timeNome]->contratarTecnico($t); // adiciona técnico
-            echo "Técnico {$t->getNome()} contratado ao time {$times[$timeNome]->nome}. Bem-vindo!\n"; 
+                    $times[$identificador]->contratarTecnico($t);
+                    echo "Técnico {$t->getNome()} contratado ao time {$times[$identificador]->getNome()}. Bem-vindo!\n"; 
+                    break;
+
+                case 3:
+                    $m = new Medico(
+                        readline("Nome: "),
+                        (int)readline("Idade: "),
+                        readline("Nacionalidade: "),
+                        readline("Especialidade: "),
+                        readline("CRM: "),
+                        (int)readline("Experiência (anos): ")
+                    );
+
+                    $times[$identificador]->contratarMedico($m);
+                    echo "Médico {$m->getNome()} adicionado ao time {$times[$identificador]->getNome()}. Bem-vindo!\n";
+                    break;
+
+                case 4:
+                    $tr = new Torcedor(
+                        readline("Nome: "),
+                        (int)readline("Idade: "),
+                        readline("Nacionalidade: "),
+                        readline("Fidelidade: "),
+                        readline("Tipo: ")
+                    );
+
+                    $times[$identificador]->adicionarTorcedor($tr);
+                    echo "Torcedor {$tr->getNome()} adicionado ao time {$times[$identificador]->getNome()}. Bem-vindo!\n";
+                    break;
+
+                default:
+                    echo "Opção inválida. Tente novamente!\n";
+            }
+
+            readline("\nDigite enter para voltar ao menu...");
             break;
 
-            case 3: // médico
-                $m = new Medico(
-                readline("Nome: "),
-                (int)readline("Idade: "),
-                readline("Nacionalidade: "),
-                readline("Especialidade: "),
-                readline("CRM: "),
-                (int)readline("Experiência (anos): ")
-            );
-
-            $times[$timeNome]->contratarMedico($m); // adiciona médico
-            echo "Médico {$m->getNome()} adicionado ao time {$times[$timeNome]->nome}. Bem-vindo!\n";
-            break;
-
-        case 4: // add torcedor
-                $tr = new Torcedor(
-                readline("Nome: "),
-                (int)readline("Idade: "),
-                readline("Nacionalidade: "),
-                readline("Fidelidade: "),
-                readline("Tipo: ")
-            );
-
-            $times[$timeNome]->adicionarTorcedor($tr); // adiciona torcedor
-            echo "Torcedor {$tr->getNome()} adicionado ao time {$times[$timeNome]->nome}. Bem-vindo!\n";
-            break;
-
-        default:
-            echo "Opção inválida. Tente novamente!\n"; // caso o usuário digite algo errado
-    }
-
-        readline("\nDigite enter para voltar ao menu..."); // pausa antes de voltar
-        break;
         case 5:
             limparTela();
             echo "=== Remover Pessoa de Time ===\n\n";
 
-            if (empty($times)) { // se n tiver nada na array de times
+            if (empty($times)) {
                 echo "Nenhum time cadastrado no sistema.\n";
                 readline("Digite enter para voltar ao menu...");
                 break;
             }
 
-            echo "Times cadastrados:\n"; // auto explicativo
-            foreach ($times as $t) echo "- {$t->nome}\n";
+            echo "Times cadastrados:\n";
+            foreach ($times as $t) echo "- {$t->getNome()}\n";
 
-            $timeNome = strtoupper(readline("\nDigite o nome do time: "));
-            if (!isset($times[$timeNome])) { // checa se o time ta cadastrado
+            $timeNome = readline("\nDigite o nome do time: ");
+            $identificador = strtoupper(str_replace(' ', '', $timeNome));
+            
+            if (!isset($times[$identificador])) {
                 echo "Time não cadastrado!\n";
                 readline("Digite enter para voltar ao menu...");
                 break;
             }
 
-            $t = $times[$timeNome];
+            $t = $times[$identificador];
 
-            echo "\nElenco do {$t->nome}:\n\n";
+            echo "\nElenco do {$t->getNome()}:\n\n";
 
             echo "Jogadores: ";
-            if (empty($t->jogadores)) 
+            if (empty($t->getJogadores())) 
                 echo "Nenhum\n";
             else { 
-                foreach ($t->jogadores as $j) echo $j->getNome() . ", "; echo "\n";  // nome dos jogadores
+                foreach ($t->getJogadores() as $j) echo $j->getNome() . ", ";
+                echo "\n";
             }
 
             echo "Médicos: ";
-            if (empty($t->medicos)) 
+            if (empty($t->getMedicos())) 
                 echo "Nenhum\n";
             else { 
-                foreach ($t->medicos as $m) echo $m->getNome() . ", "; echo "\n"; // nome dos médicos
+                foreach ($t->getMedicos() as $m) echo $m->getNome() . ", ";
+                echo "\n";
             }
 
-            echo "Técnico: " . ($t->tecnico ? $t->tecnico->getNome() : "Nenhum") . "\n"; // técnico
+            echo "Técnico: " . ($t->getTecnico() ? $t->getTecnico()->getNome() : "Nenhum") . "\n";
 
             echo "Torcedores: ";
-            if (empty($t->torcedores))
-                 echo "Nenhum\n";
+            if (empty($t->getTorcedores()))
+                echo "Nenhum\n";
             else { 
-                foreach ($t->torcedores as $tr) echo $tr->getNome() . ", "; echo "\n"; // torcedores
+                foreach ($t->getTorcedores() as $tr) echo $tr->getNome() . ", ";
+                echo "\n";
             }
 
             $tipo = (int)readline("\nEscolha o tipo de pessoa para remover: [1] Jogador [2] Médico [3] Torcedor [4] Técnico: ");
-            $nomePessoa = strtoupper(readline("Nome da pessoa: "));
+            $nomePessoa = readline("Nome da pessoa: ");
 
+            $removido = false;
             switch ($tipo) {
                 case 1:
-                    $t->jogadores = array_filter($t->jogadores, fn($j)=>strtoupper($j->getNome()) !== $nomePessoa); // percorre a lista de jogadores, mantend só os que tem nome diferente, strtoupper ignora maiuscula/minuscula
+                    $removido = $t->removerJogador($nomePessoa);
                     break;
                 case 2:
-                    $t->medicos = array_filter($t->medicos, fn($m)=>strtoupper($m->getNome()) !== $nomePessoa); // mesma lógica
+                    $removido = $t->removerMedico($nomePessoa);
                     break;
                 case 3:
-                    $t->torcedores = array_filter($t->torcedores, fn($tr)=>strtoupper($tr->getNome()) !== $nomePessoa); // mesma lógica
+                    $removido = $t->removerTorcedor($nomePessoa);
                     break;
                 case 4:
-                    if ($t->tecnico && strtoupper($t->tecnico->getNome()) === $nomePessoa)
-                        $t->tecnico = null;
-                     // verifica se tem técnico e o nome bate, se for verdadeiro remove  técnico
-                    else 
-                    echo "Técnico não encontrado.\n";
+                    $removido = $t->removerTecnico();
                     break;
                 default:
                     echo "Opção inválida.\n";
             }
 
-            echo "Pessoa removida. Adeus!\n";
+            if ($removido) {
+                echo "Pessoa removida. Adeus!\n";
+            } else {
+                echo "Pessoa não encontrada.\n";
+            }
+            
             readline("\nDigite enter para voltar ao menu...");
             break;   
 
-        case 6: // Agendar partida
+        case 6:
             limparTela();
             echo "=== Agendar Partida ===\n\n";
 
             echo "Times cadastrados:\n";
-            foreach ($times as $t) echo "- {$t->nome}\n";
-
+            foreach ($times as $t) {
+                echo "- {$t->getNome()}\n";
+            }
 
             if (count($times) < 2) {
                 echo "É preciso ter 2 times no sistema para agendar uma partida!\n";
@@ -354,38 +360,58 @@ while (true) { // loop geral
                 break;
             }
 
-            $t1 = strtoupper(readline("Time 1: "));
-            $t2 = strtoupper(readline("Time 2: "));
+            $t1Nome = readline("Time 1: ");
+            $t2Nome = readline("Time 2: ");
+            
+            $id1 = strtoupper(str_replace(' ', '', $t1Nome));
+            $id2 = strtoupper(str_replace(' ', '', $t2Nome));
 
-            if (!isset($times[$t1]) || !isset($times[$t2])) {
+            if (!isset($times[$id1]) || !isset($times[$id2])) {
                 echo "Um dos times não existe.\n";
                 readline("\nDigite enter para voltar ao menu...");
                 break;
             }
 
-            $local = readline("Local: "); // pergunta o local 
-            $dataAgendada = readline("Data (dd/mm/AAAA): "); // data
-            $dataPartida = DateTime::createFromFormat('d/m/Y', $dataAgendada); // converte pro formato dia mes ano
-            $p = new Partida($dataPartida, $local, [$times[$t1], $times[$t2]]); // cria
+            $local = readline("Local: ");
+            $dataAgendada = readline("Data (dd/mm/AAAA): ");
+            $dataPartida = DateTime::createFromFormat('d/m/Y', $dataAgendada);
+            
+            // Pergunta se a partida já foi realizada
+            $foiRealizada = strtoupper(readline("A partida já foi realizada? (S/N): "));
+            
+            $p = new Partida($dataPartida, $local, [$times[$id1], $times[$id2]]);
+            
+            // Se foi realizada, pede o placar
+            if ($foiRealizada === 'S') {
+                $golsTime1 = (int)readline("Gols do {$times[$id1]->getNome()}: ");
+                $golsTime2 = (int)readline("Gols do {$times[$id2]->getNome()}: ");
+                $p->atualizarPlacar($golsTime1, $golsTime2);
+            }
+            
             $partidas[] = $p;
             echo "Partida agendada!\n";
             readline("\nDigite enter para voltar ao menu...");
             break;
 
-        case 7: // Listar as partidas agendadas
+        case 7:
             limparTela();
             echo "=== Partidas Agendadas ===\n\n";
             if (empty($partidas)) {
                 echo "Nenhuma partida agendada.\n";
             } else {
                 foreach ($partidas as $p) {
-                    echo "- {$p->times[0]->nome} x {$p->times[1]->nome} em {$p->data->format('d/m/Y')} — {$p->local}\n";
+                    $timesPartida = $p->getTimes();
+                    $status = $p->foiRealizada() ? "✓ Realizada" : "○ Agendada";
+                    echo "- {$timesPartida[0]->getNome()} x {$timesPartida[1]->getNome()} ";
+                    echo "({$p->getPlacarFormatado()}) ";
+                    echo "em {$p->getData()->format('d/m/Y')} — {$p->getLocal()} ";
+                    echo "[{$status}]\n";
                 }
             }
             readline("\nDigite enter para voltar ao menu...");
             break;
 
-        case 8: // Informações do time
+        case 8:
             limparTela();
             echo "=== Informações do Time ===\n\n";
 
@@ -396,22 +422,16 @@ while (true) { // loop geral
             }
 
             echo "Times cadastrados: \n\n";
-            foreach ($times as $t) echo "- " . $t->nome . "\n"; // percorre os times cadastrados
+            foreach ($times as $t) echo "- " . $t->getNome() . "\n";
 
-            $nome = strtoupper(readline("\nDigite o nome do time para ver suas informações:")); // converte o readline pra caixa alta pra evitar erros
+            $nome = readline("\nDigite o nome do time para ver suas informações:");
+            $identificador = strtoupper(str_replace(' ', '', $nome));
 
-            $timeCadastrado = false;
-            foreach ($times as $t) {
-                if (strtoupper($t->nome) === $nome){
-                    limparTela();
-                    echo "=== Informações de {$t->nome} === \n\n";
-                    echo $t->info() . "\n";
-                    $timeCadastrado = true;
-                    break;
-                }
-            }
-
-            if (!$timeCadastrado){
+            if (isset($times[$identificador])) {
+                limparTela();
+                echo "=== Informações de {$times[$identificador]->getNome()} === \n\n";
+                echo $times[$identificador]->info() . "\n";
+            } else {
                 echo "Time não cadastrado! \n";
             }
 
@@ -424,6 +444,3 @@ while (true) { // loop geral
             break;
     }
 }
-
-
-// ficou meio extenso, talvez desse pra economizar linhas com mais algumas funções, mas é isso

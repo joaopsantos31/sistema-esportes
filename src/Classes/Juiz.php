@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-
 namespace SistemaEsportes\Classes;
 
 class Juiz extends Pessoa { // subclasse de pessoa
@@ -8,11 +7,19 @@ class Juiz extends Pessoa { // subclasse de pessoa
         string $nome,
         int $idade,
         string $nacionalidade,
-        public string $nivelArbitragem,
-        public bool $var = true // aqui n tem  roubo
+        protected string $nivelArbitragem, 
+        protected bool $var = true // aqui n tem roubo
     ) {
         parent::__construct($nome, $idade, $nacionalidade); // herda de pessoa
     }
-
-    public function apitarJogo(): string { return "Juiz {$this->getNome()} apitou a partida."; } // pro futuro quando tiverem partidas de vdd
+    
+    public function getNivelArbitragem(): string { return $this->nivelArbitragem; }
+    public function temVar(): bool {
+         return $this->var; 
+        }
+    
+    public function descrever(): string {
+        $varTexto = $this->var ? "com VAR" : "sem VAR";
+        return "Juiz {$this->getNome()}, {$this->idade} anos, nível {$this->nivelArbitragem} ({$varTexto})";
+    }
 }
