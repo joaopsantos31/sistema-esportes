@@ -7,7 +7,7 @@ class Medico extends Pessoa { // subclasse de pessoa
         string $nome,
         int $idade,
         string $nacionalidade,
-        protected string $especialidade, // encapsulamento
+        protected string $especialidade, 
         protected string $crm,
         protected int $anosExperiencia
     ) {
